@@ -63,4 +63,7 @@ jobs:
           app-name: 'tribal-craft-api'
           slot-name: 'Production'
           package: 'artifact/**/*.jar'
+          # Use /dev/urandom to prevent SecureRandom entropy starvation inside
+          # the Azure container (a common cause of 230 s startup timeouts).
+          startup-command: 'java -Djava.security.egd=file:/dev/./urandom -Xms256m -Xmx512m -jar /home/site/wwwroot/*.jar'
           
