@@ -25,13 +25,15 @@ jobs:
           distribution: 'microsoft'
 
       - name: Build with Maven
-        run: mvn clean install
+        # pom.xml is at the repo root; output jar lands in target/*.jar
+        run: mvn -B clean package -DskipTests
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: java-app
-          path: 'backend/target/*.jar'
+          path: 'target/*.jar'
+          if-no-files-found: error  # fail fast if the jar was not produced
 
   deploy:
     runs-on: ubuntu-latest
@@ -45,6 +47,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: java-app
+          path: artifact  # download to a known folder so the path is predictable
       
       - name: Login to Azure
         uses: azure/login@v2
@@ -59,5 +62,5 @@ jobs:
         with:
           app-name: 'tribal-craft-api'
           slot-name: 'Production'
-          package: '*.jar'
+          package: 'artifact/**/*.jar'
           
