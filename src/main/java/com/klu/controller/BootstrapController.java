@@ -19,9 +19,4 @@ public class BootstrapController {
     public Map<String, Object> bootstrap() {
         return bootstrapService.getAll();
     }
-
-    @GetMapping("/health")
-    public Map<String, Object> health() {
-        return Map.of("ok", true, "service", "TribalCraft Connect API");
-    }
 }
